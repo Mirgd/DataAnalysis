@@ -38,3 +38,36 @@ print(df.loc['maryammagdy099@gmail.com', 'last']) #df.loc[0] doesn't work while 
 df.reset_index(inplace=True)
 print(df.index)
 print(df.head)
+
+#filtering and conditions
+filt = ((df['last']=='Magdy') & (df['first'] =="Maryam"))
+print(~filt) # ~ negate the filter
+print(df.loc[~filt, 'email'])
+
+#updating columns
+df.columns = ['first_name', ' last_name', 'email']
+print(df)
+
+#list comprehension
+df.columns = [x.lower() for x in df.columns] #x.upper
+print(df)
+   #replace spaces
+df.columns = df.columns.str.replace('_', ' ')
+print(df)
+
+# rename columns
+df.rename(columns={'first name': 'first', 'last name': 'last'}, inplace=True)
+
+print(df.loc[2])
+
+# assign row values 
+df.loc[2, ['first', 'last', 'email']] = ["Saleh", "Magdy", "@gmail.com"]
+
+# correct column names
+print(df.loc[2, ['last', 'email']])
+df.loc[2, 'last'] = 'Smith' # == df.at[2, 'last'] = 'Smith' 
+print(df.loc[2, 'last'])
+
+# 
+filt = (df['email'] == "@gmail.com")
+print(df[filt])
