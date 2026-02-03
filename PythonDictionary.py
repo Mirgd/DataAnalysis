@@ -30,10 +30,10 @@ print(df.iloc[[0,1], 2])
 print(df.loc[[0,1], 'email'])
 print(df.loc[[0,1], ['email','last']])
 
-print(df.set_index('email', inplace = True)) # equal to df = df.set_index('email')
-print(df.head)
-print(df.index)
-print(df.loc['maryammagdy099@gmail.com', 'last']) #df.loc[0] doesn't work while df.iloc[0] works
+#print(df.set_index('email', inplace = True)) # equal to df = df.set_index('email')
+#print(df.head)
+#print(df.index)
+#print(df.loc['maryammagdy099@gmail.com', 'last']) #df.loc[0] doesn't work while df.iloc[0] works
 
 df.reset_index(inplace=True)
 print(df.index)
@@ -45,8 +45,8 @@ print(~filt) # ~ negate the filter
 print(df.loc[~filt, 'email'])
 
 #updating columns
-df.columns = ['first_name', ' last_name', 'email']
-print(df)
+#df.columns = ['first_name', ' last_name', 'email']
+#print(df)
 
 #list comprehension
 df.columns = [x.lower() for x in df.columns] #x.upper
@@ -61,13 +61,62 @@ df.rename(columns={'first name': 'first', 'last name': 'last'}, inplace=True)
 print(df.loc[2])
 
 # assign row values 
-df.loc[2, ['first', 'last', 'email']] = ["Saleh", "Magdy", "@gmail.com"]
+#df.loc[2, ['first', 'last', 'email']] = ["Saleh", "Magdy", "@gmail.com"]
 
 # correct column names
-print(df.loc[2, ['last', 'email']])
-df.loc[2, 'last'] = 'Smith' # == df.at[2, 'last'] = 'Smith' 
-print(df.loc[2, 'last'])
+#print(df.loc[2, ['last', 'email']])
+#df.loc[2, 'last'] = 'Smith' # == df.at[2, 'last'] = 'Smith' 
+#print(df.loc[2, 'last'])
 
 # 
 filt = (df['email'] == "@gmail.com")
 print(df[filt])
+
+# edit on multiple rows:
+df['email'].str.lower()
+df['email'] = df['email'].str.lower()
+
+#methods apply, map, applymap and replace
+print(df['email'].apply(len))
+def update_email(email):
+    return email.upper()
+print(df['email'].apply(update_email)) # == print(df['email'].apply(lambda x: x.upper()))
+
+#numbers of rows in each columns
+print(df.apply(len))
+
+#works only on series --> map function
+print(df['first'].map({'Maryam':"Mary","Saleh":"Sal"}))
+print(df.head)
+#without none valuse use --> replace function
+print(df['first'].replace({'Maryam':"Mary","Saleh":"Sal"}))
+
+# add columns
+print(df['first']+ " " + df['last'])
+df["full_name"] = df['first']+ " " + df['last']
+print(df.head)
+
+#remove columns
+df.drop(columns=['first','last'], inplace = True)
+print(df.head)
+
+#revers the process
+print(df['full_name'].str.split(' ', expand= True))
+df[['first', 'last']]=df['full_name'].str.split(' ', expand= True)
+print(df.head)
+
+#add a single row
+df = pd.concat([df,pd.DataFrame([{'first': 'Hamid'}])], ignore_index=True) # == df.loc[len(df)] = {'first': 'Hamid'}
+df.loc[len(df)] = {'first': 'soly'}
+
+print(df.head)
+
+#concatenating two dataframes 
+people = {
+    "first" : ["Ahmad","Abeer"] ,
+    "last" : ["khaled","Faid"],
+    "email": ["099@gmail.com", "abeer32@gmail.com"]
+}
+df2 = pd.DataFrame(people)
+df = pd.concat([df, df2], ignore_index = True, sort=False)
+print(df.head)
